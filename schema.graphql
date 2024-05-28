@@ -1,0 +1,32 @@
+type User @entity {
+  id: ID!
+  balances: [Balance!] @derivedFrom(field: "user")
+}
+
+type Token @entity {
+  id: ID!
+  symbol: String!
+  name: String!
+  decimals: Int!
+}
+
+type Balance @entity {
+  id: ID!
+  user: User!
+  token: Token!
+  totalSupplied: BigInt!
+  totalBorrowed: BigInt!
+  netSupplied: BigInt!
+  lastUpdated: BigInt!
+}
+
+type Snapshot @entity {
+  id: ID!
+  user: User!
+  token: Token!
+  totalSupplied: BigInt!
+  totalBorrowed: BigInt!
+  netSupplied: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+}
