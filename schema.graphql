@@ -8,24 +8,45 @@ type Token @entity {
   symbol: String!
   name: String!
   decimals: Int!
+  borrowers: [String!]! # @derivedFrom(field: "user")
 }
 
 type Balance @entity {
-  id: ID!
+  id: ID! # userId-tokenId
   user: User!
   token: Token!
+  loans: [Loan!]! @derivedFrom(field: "balance") # loans for the given user-token pair
+  snapshots: [Snapshot!]! @derivedFrom(field: "balance") # snapshots for the given user-token pair
   totalSupplied: BigInt!
+  pendingSupplied: BigInt!
+  pendingWithdrawn: BigInt!
+  pendingRepaid: BigInt!
   totalBorrowed: BigInt!
+  accruedInterest: BigInt!
+  liquidityIndex: BigInt!
   netSupplied: BigInt!
-  lastUpdated: BigInt!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+}
+
+type Loan @entity {
+  id: ID!
+  balance: Balance!
+  amount: BigInt!
+  accruedInterest: BigInt!
+  borrowRate: BigInt!
+  borrowType: Int! # 1: stable, 2:variable
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  isLiquidated: Boolean!
 }
 
 type Snapshot @entity {
-  id: ID!
-  user: User!
-  token: Token!
+  id: ID! # balanceId-timestamp
+  balance: Balance!
   totalSupplied: BigInt!
   totalBorrowed: BigInt!
+  accruedInterest: BigInt!
   netSupplied: BigInt!
   timestamp: BigInt!
   blockNumber: BigInt!
